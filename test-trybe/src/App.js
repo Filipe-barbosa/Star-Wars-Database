@@ -1,14 +1,15 @@
 import "./App.css";
-import Filter from "./filter";
-import FetchApi from "./contextApi";
+import GenerateTable from "./Table";
+import FetchApi from "./ContextApi";
+import { ChakraProvider } from "@chakra-ui/react";
 
 function App() {
   return (
-    <h1>
+    <ChakraProvider>
       <FetchApi>
-        <Filter />
+        <GenerateTable />
       </FetchApi>
-    </h1>
+    </ChakraProvider>
   );
 }
 
