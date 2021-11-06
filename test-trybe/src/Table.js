@@ -9,64 +9,30 @@ import {
   Th,
   Td,
   TableCaption,
-  Container,
-  Stack,
 } from "@chakra-ui/react";
 
 export default function GenerateTable() {
   const { isLoading, data } = useAPI();
-  console.log(data);
+  const columns = data[0] && Object.keys(data[0]);
   return (
-    <Container maxW={"5xl"}>
-      <Stack
-        textAlign={"center"}
-        align={"center"}
-        spacing={{ base: 8, md: 10 }}
-        py={{ base: 20, md: 28 }}
-      >
-        <SearchFilterName />
-        {isLoading && <p>Loading...</p>}
-        <Table variant="striped" size="sm">
-          <TableCaption>StarTable</TableCaption>
-          <Thead>
+    <div>
+      <SearchFilterName />
+      {isLoading && <p>Loading...</p>}
+      <Table variant="striped" size="sm">
+        <TableCaption>StarTable</TableCaption>
+        <Thead>
+          <Tr>{data[0] && columns.map((heading) => <Th>{heading}</Th>)}</Tr>
+        </Thead>
+        <Tbody>
+          {data.map((row) => (
             <Tr>
-
-              <Th>Nome</Th>
-              <Th> Clima</Th>
-              <Th>Diametro</Th>
-              <Th>Criação</Th>
-              <Th>Edição</Th>
-              <Th>Gravidade</Th>
-              <Th>Filme</Th>
-              <Th>Orbita</Th>
-              <Th>População</Th>
-              <Th>P.Rotação</Th>
-              <Th>Agua da superficie</Th>
-              <Th>Terreno</Th>
+              {columns.map((column) => (
+                <Td>{row[column]}</Td>
+              ))}
             </Tr>
-          </Thead>
-          <Tbody>
-            {data.map((data) => {
-              return (
-                <Tr>
-                  <Td>{data.name}</Td>
-                  <Td>{data.climate}</Td>
-                  <Td>{data.diameter}</Td>
-                  <Td>{data.created}</Td>
-                  <Td>{data.edited}</Td>
-                  <Td> {data.gravity} </Td>
-                  <Td> {data.films} </Td>
-                  <Td> {data.orbital_period} </Td>
-                  <Td>{data.population}</Td>
-                  <Td>{data.rotation_period}</Td>
-                  <Td>{data.surface_water}</Td>
-                  <Td>{data.terrain}</Td>
-                </Tr>
-              );
-            })}
-          </Tbody>
-        </Table>
-      </Stack>
-    </Container>
+          ))}
+        </Tbody>
+      </Table>
+    </div>
   );
 }

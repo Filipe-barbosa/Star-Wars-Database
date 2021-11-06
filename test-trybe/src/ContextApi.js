@@ -11,7 +11,6 @@ function FetchApi({ children }) {
     fetch(`https://swapi-trybe.herokuapp.com/api/planets/`)
       .then((response) => response.json())
       .then((data) => {
-        console.log("dado que acabou de chegar", data);
         setData(data.results);
         setIsLoading(false);
       });
