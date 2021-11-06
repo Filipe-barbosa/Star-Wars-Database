@@ -1,5 +1,5 @@
 import "./App.css";
-import GenerateTable from "./Table";
+import Table from "./Table";
 import FetchApi from "./ContextApi";
 import { ChakraProvider } from "@chakra-ui/react";
 
@@ -7,7 +7,7 @@ function App() {
   return (
     <ChakraProvider>
       <FetchApi>
-        <GenerateTable />
+        <Table />
       </FetchApi>
     </ChakraProvider>
   );

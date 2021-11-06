@@ -2,7 +2,7 @@ import React from "react";
 import { useAPI } from "./ContextApi";
 import SearchFilterName from "./SearchFilters";
 import {
-  Table,
+  Table as HeaderTable,
   Thead,
   Tbody,
   Tr,
@@ -11,28 +11,29 @@ import {
   TableCaption,
 } from "@chakra-ui/react";
 
-export default function GenerateTable() {
-  const { isLoading, data } = useAPI();
-  const columns = data[0] && Object.keys(data[0]);
+export default function Table() {
+  const { isLoading, data, selectColumns } = useAPI();
   return (
     <div>
       <SearchFilterName />
       {isLoading && <p>Loading...</p>}
-      <Table variant="striped" size="sm">
+      <HeaderTable variant="striped" size="sm">
         <TableCaption>StarTable</TableCaption>
         <Thead>
-          <Tr>{data[0] && columns.map((heading) => <Th>{heading}</Th>)}</Tr>
+          <Tr>
+            {data[0] && selectColumns.map((heading) => <Th>{heading}</Th>)}
+          </Tr>
         </Thead>
         <Tbody>
-          {data.map((row) => (
+          {data.map((data) => (
             <Tr>
-              {columns.map((column) => (
-                <Td>{row[column]}</Td>
+              {selectColumns.map((column) => (
+                <Td>{data[column]}</Td>
               ))}
             </Tr>
           ))}
         </Tbody>
-      </Table>
+      </HeaderTable>
     </div>
   );
 }
