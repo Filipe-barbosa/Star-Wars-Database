@@ -14,6 +14,7 @@ function FetchApi({ children }) {
         "rotation_period",
         "surface_water",
       ],
+      filteredResults: [],
       filterByName: {
         name: "",
       },
@@ -37,7 +38,20 @@ function FetchApi({ children }) {
         setData(results);
         setIsLoading(false);
       });
-  }, [filtersState]);
+  }, [filtersState.filters.filterByName.name]);
+
+  useEffect(() => {
+    setFiltersState((state) => ({
+      filters: {
+        ...state.filters,
+        filteredResults: applyFiltersToResults(
+          data,
+          state.filters.filterByNumericValues
+        ),
+      },
+    }));
+  }, [data, filtersState.filters.filterByNumericValues]);
+
   const selectColumns = data[0] && Object.keys(data[0]);
   function searchName(name) {
     setFiltersState({
@@ -149,4 +163,33 @@ export function useAPI() {
     throw new Error("Context must be used within a Provider");
   }
   return context;
+}
+
+function applyFiltersToResults(results, filters) {
+  if (!results || !filters) return [];
+
+  let filteredResults = results;
+  for (const filter of filters) {
+    const { column, comparison, value } = filter;
+    if (!column || !comparison || !value) continue;
+    switch (comparison) {
+      case "=":
+        filteredResults = filteredResults.filter(
+          (item) => item[column] === value
+        );
+        continue;
+      case ">":
+        filteredResults = filteredResults.filter(
+          (item) => item[column] > value
+        );
+        continue;
+      case "<":
+        filteredResults = filteredResults.filter(
+          (item) => item[column] < value
+        );
+        continue;
+      // no default
+    }
+  }
+  return filteredResults;
 }

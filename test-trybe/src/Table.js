@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 
 export default function Table() {
-  const { isLoading, data, selectColumns } = useAPI();
+  const { isLoading, filtersState, selectColumns } = useAPI();
   return (
     <div>
       <SearchFilterName />
@@ -21,15 +21,15 @@ export default function Table() {
         <TableCaption>StarTable</TableCaption>
         <Thead>
           <Tr>
-            {data[0] && selectColumns.map((heading) => <Th>{heading}</Th>)}
+            {selectColumns &&
+              selectColumns.map((heading) => <Th>{heading}</Th>)}
           </Tr>
         </Thead>
         <Tbody>
-          {data.map((data) => (
+          {filtersState.filters.filteredResults.map((data) => (
             <Tr>
-              {selectColumns.map((column) => (
-                <Td>{data[column]}</Td>
-              ))}
+              {selectColumns &&
+                selectColumns.map((column) => <Td>{data[column]}</Td>)}
             </Tr>
           ))}
         </Tbody>
