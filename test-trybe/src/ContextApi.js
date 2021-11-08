@@ -1,19 +1,19 @@
 import React, { useContext, useState, useEffect, createContext } from "react";
 
 const APIContext = createContext();
+const allFilterOptions = [
+  "population",
+  "orbital_period",
+  "diameter",
+  "rotation_period",
+  "surface_water",
+];
 
 function FetchApi({ children }) {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filtersState, setFiltersState] = useState({
     filters: {
-      availableFilterOptions: [
-        "population",
-        "orbital_period",
-        "diameter",
-        "rotation_period",
-        "surface_water",
-      ],
       filteredResults: [],
       filterByName: {
         name: "",
@@ -21,6 +21,10 @@ function FetchApi({ children }) {
       filterByNumericValues: [],
     },
   });
+  const selectedOptions = filtersState.filters.filterByNumericValues.map(
+    (filter) => filter.column
+  );
+
   // Fetch data
   useEffect(() => {
     fetch(
@@ -77,25 +81,20 @@ function FetchApi({ children }) {
     });
   };
   const selectFilterColumn = (position, column) => {
+    const newFilterByNumericValues =
+      filtersState.filters.filterByNumericValues.map((value, index) => {
+        if (position === index) {
+          return {
+            ...value,
+            column,
+          };
+        }
+        return value;
+      });
     setFiltersState({
       filters: {
         ...filtersState.filters,
-        /*
-        availableFilterOptions:
-          filtersState.filters.availableFilterOptions.filter(
-            (option) => option !== column
-          ), */
-        filterByNumericValues: [
-          ...filtersState.filters.filterByNumericValues.map((value, index) => {
-            if (position === index) {
-              return {
-                ...value,
-                column,
-              };
-            }
-            return value;
-          }),
-        ],
+        filterByNumericValues: newFilterByNumericValues,
       },
     });
   };
@@ -148,6 +147,8 @@ function FetchApi({ children }) {
         selectFilterColumn,
         selectComparisonFilter,
         selectValueFilter,
+        selectedOptions,
+        allFilterOptions,
       }}
     >
       {children}
