@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect, createContext } from "react";
+import { useAPI } from "./ContextApi";
 
-const APIContext = createContext();
+const ContextFilter = createContext();
 const allFilterOptions = [
   "population",
   "orbital_period",
@@ -9,9 +10,8 @@ const allFilterOptions = [
   "surface_water",
 ];
 
-function FetchApi({ children }) {
-  const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+export default function FilterContext({ children }) {
+  const { data } = useAPI();
   const [filtersState, setFiltersState] = useState({
     filters: {
       filteredResults: [],
@@ -24,25 +24,6 @@ function FetchApi({ children }) {
   const selectedOptions = filtersState.filters.filterByNumericValues.map(
     (filter) => filter.column
   );
-
-  // Fetch data
-  useEffect(() => {
-    fetch(
-      `https://swapi-trybe.herokuapp.com/api/planets/?search=${filtersState.filters.filterByName.name}`
-    )
-      //TODO debounce fecth
-      .then((response) => response.json())
-      .then((data) =>
-        data.results.map((item) => {
-          const { residents, ...filteredResult } = item;
-          return filteredResult;
-        })
-      )
-      .then((results) => {
-        setData(results);
-        setIsLoading(false);
-      });
-  }, [filtersState.filters.filterByName.name]);
 
   useEffect(() => {
     setFiltersState((state) => ({
@@ -136,11 +117,9 @@ function FetchApi({ children }) {
   };
 
   return (
-    <APIContext.Provider
+    <ContextFilter.Provider
       value={{
-        data,
         selectColumns,
-        isLoading,
         filtersState,
         searchName,
         addNewFilter,
@@ -152,14 +131,12 @@ function FetchApi({ children }) {
       }}
     >
       {children}
-    </APIContext.Provider>
+    </ContextFilter.Provider>
   );
 }
 
-export default FetchApi;
-
-export function useAPI() {
-  const context = useContext(APIContext);
+export function useFilter() {
+  const context = useContext(ContextFilter);
   if (context === undefined) {
     throw new Error("Context must be used within a Provider");
   }

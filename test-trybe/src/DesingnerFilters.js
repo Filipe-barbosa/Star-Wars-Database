@@ -8,7 +8,8 @@ import {
   Container,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useAPI } from "./ContextApi";
+import { CloseButton } from "@chakra-ui/react";
+import { useAPI } from "./context/ContextApi";
 
 export default function Filters() {
   const { filtersState, searchName, addNewFilter } = useAPI();
@@ -88,6 +89,7 @@ const SelectFilter = () => {
         boxShadow={"lg"}
         p={3}
         rounded={"xl"}
+        spacing="11"
         align={"center"}
         pos={"relative"}
         borderWidth="1px"
@@ -123,7 +125,9 @@ const SelectFilter = () => {
           value={value}
           type="number"
           onChange={(event) => selectValueFilter(index, event.target.value)}
+          placeholder="Valor"
         ></Input>
+        <CloseButton />
       </Stack>
     )
   );
