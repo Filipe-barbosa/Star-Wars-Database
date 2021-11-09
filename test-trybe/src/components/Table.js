@@ -47,7 +47,7 @@ export default function Table() {
             </HeaderTable>
           </Stack>
         )}
-        {selectColumns === undefined && !isLoading && (
+        {filtersState.filters.filteredResults.length === 0 && !isLoading && (
           <Stack spacing={0} align={"center"}>
             <Heading>No results</Heading>
           </Stack>
