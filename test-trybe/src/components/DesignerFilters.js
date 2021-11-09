@@ -7,9 +7,9 @@ import {
   Button,
   Container,
   useColorModeValue,
+  CloseButton
 } from "@chakra-ui/react";
-import { CloseButton } from "@chakra-ui/react";
-import { useAPI } from "./context/ContextApi";
+import { useAPI } from "../context/ApiContext";
 
 export default function Filters() {
   const { filtersState, searchName, addNewFilter } = useAPI();

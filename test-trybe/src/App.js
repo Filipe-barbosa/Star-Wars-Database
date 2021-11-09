@@ -1,16 +1,13 @@
 import "./App.css";
-import Table from "./Table";
-import ApiContext from "./context/ContextApi";
-import ContextFilter from "./context/FilterContext";
+import Table from "./components/Table";
+import ApiContext from "./context/ApiContext";
 import { ChakraProvider } from "@chakra-ui/react";
 
 function App() {
   return (
     <ChakraProvider>
       <ApiContext>
-        <ContextFilter>
-          <Table />
-        </ContextFilter>
+        <Table />
       </ApiContext>
     </ChakraProvider>
   );

@@ -1,6 +1,6 @@
 import React from "react";
-import { useAPI } from "./context/ContextApi";
-import Filters from "./DesingnerFilters";
+import { useAPI } from "../context/ApiContext";
+import Filters from "./DesignerFilters";
 import {
   Table as HeaderTable,
   Thead,
@@ -21,7 +21,7 @@ export default function Table() {
     <Box display="flex">
       <Container maxW={"7xl"} py={16} as={Stack}>
         <Stack spacing={0} align={"center"}>
-          <Heading>Start PLanets</Heading>
+          <Heading>Star Worts PLanets</Heading>
         </Stack>
 
         <Filters />
