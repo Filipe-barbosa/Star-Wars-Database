@@ -21,16 +21,15 @@ function ApiContext({ children }) {
       filterByNumericValues: [],
     },
   });
+  const selectColumns = data[0] && Object.keys(data[0]);
   const selectedOptions = filtersState.filters.filterByNumericValues.map(
     (filter) => filter.column
   );
 
-  // Fetch data
   useEffect(() => {
     fetch(
       `https://swapi-trybe.herokuapp.com/api/planets/?search=${filtersState.filters.filterByName.name}`
     )
-      //TODO debounce fecth
       .then((response) => response.json())
       .then((data) =>
         data.results.map((item) => {
@@ -56,7 +55,6 @@ function ApiContext({ children }) {
     }));
   }, [data, filtersState.filters.filterByNumericValues]);
 
-  const selectColumns = data[0] && Object.keys(data[0]);
   function searchName(name) {
     setFiltersState({
       filters: {
@@ -91,6 +89,17 @@ function ApiContext({ children }) {
         }
         return value;
       });
+    setFiltersState({
+      filters: {
+        ...filtersState.filters,
+        filterByNumericValues: newFilterByNumericValues,
+      },
+    });
+  };
+  const removeFilterByNumericValue = (position, filters) => {
+    const newFilterByNumericValues = filters.filterByNumericValues.filter(
+      (_, index) => position !== index
+    );
     setFiltersState({
       filters: {
         ...filtersState.filters,
@@ -149,6 +158,7 @@ function ApiContext({ children }) {
         selectValueFilter,
         selectedOptions,
         allFilterOptions,
+        removeFilterByNumericValue,
       }}
     >
       {children}

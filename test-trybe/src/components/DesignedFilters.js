@@ -7,7 +7,7 @@ import {
   Button,
   Container,
   useColorModeValue,
-  CloseButton
+  CloseButton,
 } from "@chakra-ui/react";
 import { useAPI } from "../context/ApiContext";
 
@@ -23,13 +23,14 @@ export default function Filters() {
       borderRadius="md"
     >
       <Container maxW={"3xl"} py={3} as={Stack} padding={1}>
-        <Stack direction={"row"}>
+        <Stack direction={"row"} spacing="100px">
           <Box
             padding="1rem"
             shadow="md"
             borderWidth="1px"
             borderRadius="md"
-            maxH="108px"
+            alignItems="flex-start"
+            maxH="112px"
             bg={useColorModeValue("white", "gray.700")}
           >
             <Stack direction="column" align={"center"}>
@@ -48,7 +49,7 @@ export default function Filters() {
             flex="3"
             rounded={"xl"}
             align={"center"}
-            paddingTop="0.5rem"
+            paddingTop="1rem"
             shadow="md"
             borderWidth="1px"
             borderRadius="md"
@@ -80,6 +81,7 @@ const SelectFilter = () => {
     selectValueFilter,
     selectedOptions,
     allFilterOptions,
+    removeFilterByNumericValue,
   } = useAPI();
   return filtersState.filters.filterByNumericValues.map(
     ({ column, comparison, value }, index) => (
@@ -127,7 +129,11 @@ const SelectFilter = () => {
           onChange={(event) => selectValueFilter(index, event.target.value)}
           placeholder="Valor"
         ></Input>
-        <CloseButton />
+        <CloseButton
+          onClick={(event) =>
+            removeFilterByNumericValue(index, filtersState.filters)
+          }
+        />
       </Stack>
     )
   );
