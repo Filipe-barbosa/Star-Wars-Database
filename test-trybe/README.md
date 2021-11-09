@@ -6,18 +6,18 @@ Este é um projeto desenvolvido como parte para a aprovação no processo seleti
 
 ![Ilustração do app](./public/designApp.jpeg?raw=true=10x20 "Tela do app")
 
-## O que é o Star Wars Planets
+## O Que é o Star Wars Planets
 
 Uma tabela que faz requisições em um Api e retorna os todos os planetas e seus devidos atributos. Esses resultados podem ser filtrados pelo nome do planeta e tambem por uma combinação de filtros que selecionam algumas colunas e valores .
 
 ## Rodando o projeto
 
-Para rodar o projeto basta clonar instalar as dependencias com yarn ou npm install, para rodar apenas com o comando `yarn run` ou `npm start`.
+Para rodar o projeto   instala-se as dependências com yarn ou npm install, para rodar apenas com o comando `yarn run` ou `npm start`.
 Para o desenvolvimento foi usada a biblioteca yarn.
 
 ## Estruturação do projeto
 
-O projeto segue estruturado em pastas onde temos a pasta components que contem todos os componentes, e a context onde estão alocados os contextos usados.
+O projeto segue estruturado em pastas onde temos a pasta components que contém todos os componentes, e a context onde estão alocados os contextos usados.
 
 #### Ferramentas.
 
@@ -25,15 +25,15 @@ O projeto foi desenvolvido com a linguagem `JavaScript` e a biblioteca react. Co
 
 ## Estratégia de desenvolvimento.
 
-Dado que para se ter um código legivel e menos verboso o projeto está dividido em componentes de estilos e componentes de lógica. O context `ApiContext` é onde está contido todo o context utilizado no projeto. Durante o desenvolvimento foi pensada a estratégia de usar 2 contexts, um detendo o comportamento da Api e outro para os filtros, tal estratégia não seguiu a diante pois eles estavam envolvidos em uma dependência ciclica.
+Dado que para se ter um código legível e menos verboso o projeto está dividido em componentes de estilos e componentes de lógica. O context `ApiContext` é onde está contido todo o context utilizado no projeto. Esta estratégia foi adotada para se evitar cair em uma dependência cíclica ao separar um context para o comportamento da API e outro para filtros.
 
-### ContextApi
+### ApiContext
 
-Provedor de estados dentro da aplicação, o context api foi divido em 2 grandes tarefas que provem todos os comportamentos. A primeira lida com os comportamentos da api, fazendo as requisições dinamicas que são alteradas sempre que o filtro nome sobre um alteração. Dada a documentação da api, foi concluido que a mesma so daria suporte para chamadas com filtro apenas de nome.
+Este é o provedor de estados da aplicação, e foi dividido em 2 grandes tarefas que provém todos os comportamentos. A primeira lida com os comportamentos da api, fazendo as requisições dinâmicas que são alteradas sempre que o filtro nome sobre um alteração. Dada a documentação da api, foi concluído que a mesma so daria suporte para chamadas com filtro apenas de nome.
 
-A segunda e maior tarefa do context e prover os estados de filtro, que foram dividos da seguinte maneira. Separados em um objetos em 3 grandes classes sendo `FiltroByName`, que faz uma nova requisição sempre que o filtro é alterado. O `FilterByNumericValues` que é o objeto responsável por gerenciar o segundo filtro que é a combinação de seleção de coluna condição e valor.
+A segunda problemática que o ApiContext procurar resolver é provê o resultados dos filtros, ele executa esta tarefa processando em algumas funções que limitam-se a pequenas tarefas e provendo os resultados a um objeto complexo e prover os estados dos filtros que foram dividos da seguinte maneira. Separados em um objeto de 3 grandes classes sendo `FiltroByName`, que faz uma nova requisição sempre que o filtro é alterado. O `FilterByNumericValues` que é o objeto responsável por gerenciar o segundo filtro que é a combinação de seleção de coluna, condição e valor  `filteredResulted` que provê para a tabela.
 
-Todos os dados os comportamentos são providos pelo contextApi.
+Todos os dados os comportamentos são providos pelo ApiContext.
 
 ### Filters
 
@@ -43,49 +43,48 @@ Os comportamentos dos filtros foram dividos algumas funções que serão explana
 
 #### Filtrar por nome.
 
-`filterbyName`, O campo de input grava a alteração no objeto que por sua vez chama a api passando os parametros recebidos, os dados recebidos da chamada são gravados no objeto `filterResult`, que é provido para o componente table e é renderizado na tela.
+`filterbyName`, O campo de input grava a alteração no objeto que por sua vez chama a api passando os parâmetros, os dados recebidos da chamada são gravados no objeto `filterResult`, que é provido para o componente table e é renderizado na tela.
 
-#### Combinação de filtros valores
+#### Combinação de filtros de valores
 
 Na aplicação denominado de `filterByNumericValue` que por sua vez é uma lista de objetos. Diferente do `filterByName` ele não altera a requisição, apenas itera no `filterResults` gerando um novo que satisfaça as condições dos filtros passados e passa a nova lista para o componente `Table`.
-Para gerar cada filtro foi criada uma função que chama outras funções onde cada uma e responsãvel por gravar uma coluna do objeto.
+Para gerar cada filtro foi criada uma função que chama outras funções onde cada uma e responsável por gravar uma coluna do objeto.
 
 #### Exclusão dos filtros
 
-Quando algum desses filtros é excluido, é gerado um novo objeto sem o filtro excluido, que faz a comparação através do id e a exibição dos dados na tabela volta a ser como eram antes da aplicação do filtro.
+Quando algum desses filtros é excluído, é gerado um novo objeto sem o filtro excluído, que faz a comparação através do id e a exibição dos dados na tabela volta a ser como eram antes da aplicação do filtro.
 
 #### Gerando vários filtros sem repetição.
 
-Para gerar vários filtros e garantir que eles não estejam repetidos, foi criada uma função que verifica quais as colunas ainda não foram selecionadas e quais ja estão selecionados, esse dado e provido para o Html que por sua vez desabilita todos os filtros que estão selecionados evitando assim a redundancia de filtros.
+Para gerar vários filtros e garantir que eles não estejam repetidos, foi criada uma função que verifica quais as colunas ainda não foram selecionadas e quais ja estão selecionados, esse dado e provido para o Html que por sua vez desabilita todos os filtros que estão selecionados evitando assim a redundância de filtros.
 A quantidade de filtros e limitada ao número de colunas disponíveis.
 
 ### Componentes de exibição.
 
-Para agilizar o desenvolvimento foi aplicado o uso pro processador de Css Chakra Ui. Sua escolha foi dada pela a experiencia da pessoa desenvolvedora com a ferramenta e suas dependencias serem baseadas todas em `js`.
+Para agilizar o desenvolvimento foi aplicado o uso pro processador de Css Chakra Ui. Sua escolha foi dada pela a experiência da pessoa desenvolvedora com a ferramenta e suas dependências serem baseadas todas em `js`.
 
-A renderização esté condicionada a 3 condiçoes principais, que é o estado de loading, a tabela sendo renderizada, e quando o filtro aplicado nao motra nenhum resultado. A prática de renderização condicional foi aplicada para que nenhum componente estaja ocupando o Dom virtual sem estar presente na tela, o que evita vários comportamentos adversos na aplicação.
+A renderização esté condicionada a 3 condições principais, que é o estado de loading, a tabela sendo renderizada, e quando o filtro aplicado não motra nenhum resultado. A prática de renderização condicional foi aplicada para que nenhum componente estaja ocupando o Dom virtual sem estar presente na tela, o que evita vários comportamentos adversos na aplicação.
 
-Para gerar as colunas da tabela que por sua vez é constituida das chaves do objeto resultante da chamada, uma variável mapeia todas as chaves e gera o cabeçalho da tabela.Um filtro é aplicado no objeto assim que ele é resultante da função para renderizar apenas as colunas desejadas. As linhas seguem o mesmo parametro, mas são alteradas sempre que o objeto `filter.filtersResults` sofre alteração.
+Para gerar as colunas da tabela que por sua vez é constituída das chaves do objeto resultante da chamada, uma variável mapeia todas as chaves e gera o cabeçalho da tabela.Um filtro é aplicado no objeto assim que ele é resultante da função para renderizar apenas as colunas desejadas. As linhas seguem o mesmo parâmetro, mas são alteradas sempre que o objeto `filter.filtersResults` sofre alteração.
 
 O componente table na sua composição chama componente `desingedFilters` e é o componente responsável pela estilização de todos os filtros.
 
 Para um bom dimencionamento da tabela ela possui um scrol lateral.
 
-## Formatação de código
+### Formatação de código
 
-Durante o desenvolvimento foi usado o esLint- mas não instalado como dependencia do projeto, mas no configurado do editor de texto.
+Durante o desenvolvimento foi usado o es-Lint mas não instalado como dependência do projeto, configurado do editor de texto.
 
 ## Melhorias.
 
-Dada a condição de tempo o produto até então desenvolvido trata-se da versão zero. Como versão um foi pensada algumas melhorias tais como:
+Dada a condição de tempo o produto até então desenvolvido trata-se da versão 0. Como versão 1 foram pensadas algumas melhorias tais como:
 
 <ul>
 
-#### Aplicação de Debounce
+#### Em Aplicação de Debounce
 
  <ul>
-Para evitar a chamadas desnecessárias, aplicar um debounce na hora da chamada, tal estratégia foi pensada na v0 mas abortada por uma questão de requerer maiores estudos do uso da ferramente atrelada ao useContext, para tal solução ser aplicada de maneira eficiente o tempo nao era hábil.  O uso de recursos como o useMemo e o useCalback foram cogitadas para aplicar na resolução mas não levadas a diante.
-</ul>
+Aplicar um debounce na hora da chamada, porém para adotar tal estratégia é necessário um tempo hábil maior devido às suas complexidades inerentes a seu uso atrelado ao useContext. Outros interessantes de serem explorados seriam useMemo e useCalback, porém seus usos também implicariam em maior tempo de execução desta tarefa.
 
 #### Paginação ou Scroll Infinito.
 
@@ -96,7 +95,7 @@ Adotar uma estratégia de paginar as chamadas ou ate mesmo a implementação de 
 #### Uso de linguagem fortemente Tipada.
 
 <ul>
-O uso de uma linguagem fortemente tipada, o que traria mais segurança na inferencia dos tipos, e uma maior agilidade no desenvolvimento, pois com os objetos devidamente tipados o código te conta mais sobre cada objeto, evitando várias consultas em outros arquivos para verificar tipos. Tal estratégia não foi implementada dado o maior dominio da pessoa  desenvolvedora com a  linguagem escolhida e um tempo limitante para a entrega.
+O uso de uma linguagem fortemente tipada, o que traria mais segurança na inferência dos tipos, e uma maior agilidade no desenvolvimento, pois com os objetos devidamente tipados o código te conta mais sobre cada objeto, evitando várias consultas em outros arquivos para verificar tipos. Apesar das vantagens apresentadas por linguagens tipadas, a sua utilização apresenta uma complexidade maior, e por isso o uso desta é sugerido como uma melhoria deste projeto caso o mesmo fosse desenvolvido em um tempo maior.
 </ul>
 
 #### Teste unitário.
@@ -110,6 +109,7 @@ Estratégia que faz muito sentido para a evolução do produto, o que seria de m
 
 <ul>
 Tratar os resultados  retornados pela api como  unknown e formatação dos valores na tabela, como data links etc.
+<ul>
 </ul>
 
 ## Considerações finais
